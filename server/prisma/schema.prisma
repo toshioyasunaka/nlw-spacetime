@@ -7,7 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Tabela de Usuário
 model User {
-  id   String @id @default(uuid())
-  name String
+  id        String @id @default(uuid())
+  githubId  Int    @unique
+  name      String
+  login     String // nome proveniente do github 
+  avatarUrl String // avatar do github
+
+  memories Memory[]
+}
+
+// Tabela de Memorias
+model Memory {
+  id     String @id @default(uuid())
+  userId String // referencia o usuário
+
+  coverUrl  String // endereço da imagem/video de fundo das memórias
+  content   String
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relação das tabelas de memórias e usuário
+  user User @relation(fields: [userId], references: [id])
 }
